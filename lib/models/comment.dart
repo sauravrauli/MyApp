@@ -15,13 +15,13 @@ String commentToJson(Comment data) {
 class Comment {
   final String id;
   final String userName;
-  final String location;
+  final DateTime dateTime;
   final File image;
 
   Comment({
     @required this.id,
     @required this.userName,
-    @required this.location,
+    @required this.dateTime,
     @required this.image,
   });
 
@@ -29,13 +29,14 @@ class Comment {
         id: json["id"],
         userName: json["userName"],
         image: json["image"],
-        location: null
+        dateTime: json["dateTime"],
       );
 
   Map<String, dynamic> toMap() => {
         "id": id,
         "userName": userName,
-        "image": image
+        "image": image,
+        "dateTime": dateTime,
       };
 }
 

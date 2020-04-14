@@ -24,7 +24,7 @@ class UserComments with ChangeNotifier {
       id: DateTime.now().toString(),
       userName: pickedName,
       image: pickedImage,
-      location: null,
+      dateTime: DateTime.now(),
     );
     _comments.add(newComment);
     notifyListeners();
@@ -45,7 +45,7 @@ class UserComments with ChangeNotifier {
             id: comment['id'],
             userName: comment['userName'],
             image: File(comment['image']),
-            location: null,
+            dateTime: DateTime.now(),
           ),
         )
         .toList();

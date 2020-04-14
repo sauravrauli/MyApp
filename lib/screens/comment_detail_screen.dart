@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_comments.dart';
+//import '../helpers/db_helper.dart';
+
 
 class CommentDetailScreen extends StatelessWidget {
   static const routeName = '/comment-detail';
@@ -14,6 +16,16 @@ class CommentDetailScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('News'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.delete,
+              ),
+              onPressed: () {
+                 //DBHelper.db.delete(comment.id);
+              },
+            )
+          ],
         ),
         body: Column(
           children: <Widget>[
@@ -26,8 +38,13 @@ class CommentDetailScreen extends StatelessWidget {
                 width: double.infinity,
               ),
             ),
-            SizedBox(height: 10,),
-            Text(selectedComment.userName, textAlign: TextAlign.left,)
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              selectedComment.userName,
+              textAlign: TextAlign.left,
+            )
           ],
         ));
   }
