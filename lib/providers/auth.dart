@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:async';
-
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
+
+import 'package:flutter/widgets.dart';
 import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
+  
   String _token;
   DateTime _expiryDate;
   String _userId;
@@ -28,7 +29,7 @@ class Auth with ChangeNotifier {
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
     final url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyA27t0YspuwrgiHR9hst53P0nOsk41r9o4';
+        'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyDRsY1Wwug_us4sFGlBkvj5ySiZywMK2n4';
     try {
       final response = await http.post(
         url,
@@ -44,8 +45,8 @@ class Auth with ChangeNotifier {
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
-      _token = responseData['idToken'];
-      _userId = responseData['localId'];
+      _token = responseData['idToken']; //Firebase Auth ID token for authenticated user.
+      _userId = responseData['localId']; //UID of authenticated user.
       _expiryDate = DateTime.now().add(
         Duration(
           seconds: int.parse(

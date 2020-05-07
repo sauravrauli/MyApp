@@ -6,8 +6,26 @@ class ViewScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(' HELLO MY SCHEDULE IS ...:'),
+      body: Column(
+        children: <Widget>[
+          Container(
+            height: 250,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/office_work.png'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

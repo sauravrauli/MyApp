@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:myhealthapp/screens/add_comment_screen.dart';
+import 'package:myhealthapp/screens/authenticate/authenticate.dart';
 import 'package:myhealthapp/screens/tabs_screen.dart';
+import 'package:myhealthapp/screens/team_detail_screen.dart';
 import 'package:myhealthapp/screens/view_overview_screen.dart';
 import 'package:myhealthapp/screens/view_schedule.dart';
 import 'package:myhealthapp/screens/view_team_screen.dart';
+import 'package:myhealthapp/screens/wrapper.dart';
 import './screens/view_overview_screen.dart';
 //import './screens/tabs_screen.dart';
 //import './screens/confirm_shift_screen.dart';
@@ -11,12 +14,16 @@ import './screens/view_news_screen.dart';
 //import './screens/view_shifts_screen.dart';
 //import './screens/view_timesheet_screen.dart';
 import './screens/auth_screen.dart';
+import './screens/authenticate/authenticate.dart';
 //import './screens/add_comment_screen.dart';
 import './screens/comment_detail_screen.dart';
 
 import 'package:provider/provider.dart';
 import './providers/auth.dart';
 import './providers/user_comments.dart';
+import './providers/comments.dart';
+import './providers/auth2.dart';
+import './models/user.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,30 +32,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-          value: Auth(),
+        StreamProvider<User>.value(
+          value: AuthService().user,
         ),
-        ChangeNotifierProvider.value(
-          value: UserComments(),
-        )
+        //  ChangeNotifierProvider.value(
+        //  value: UserComments(),
+        // ),
+        //ChangeNotifierProvider.value(
+        //value: Comments(),
+        // ),
       ],
-      child: Consumer<Auth>(
+      child: Consumer<User>(
           builder: (ctx, auth, _) => MaterialApp(
                 title: 'NHS Register',
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                   accentColor: Colors.white,
                 ),
-                home: auth.isAuth
-                    ? TabsScreen()
-                    : TabsScreen(), //change first page output on emulator.
+                home: //auth.isAuth
+                    //? TabsScreen()
+                    // :
+                    Wrapper(), //change first page output on emulator.
                 routes: {
                   ViewNewsScreen.routeName: (ctx) => ViewNewsScreen(),
                   ViewTeamScreen.routeName: (ctx) => ViewTeamScreen(),
                   ViewScheduleScreen.routeName: (ctx) => ViewScheduleScreen(),
                   ViewOverviewScreen.routeName: (ctx) => ViewOverviewScreen(),
-                  AddCommentScreen.routeName: (ctx) => AddCommentScreen(), //added this 
-                  CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
+                  AddCommentScreen.routeName: (ctx) => AddCommentScreen(), //added this
+                  //CommentDetailScreen.routeName: (ctx) => CommentDetailScreen(),
+                 
                 },
               )),
     );

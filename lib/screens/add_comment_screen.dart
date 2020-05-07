@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:myhealthapp/helpers/database.dart';
+import 'package:myhealthapp/screens/view_news_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/image_input.dart';
-import '../providers/user_comments.dart';
+import 'users_comments.dart';
 
 class AddCommentScreen extends StatefulWidget {
   static const routeName = '/add-comment';
@@ -21,13 +25,54 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
     _pickedImage = pickedImage;
   }
 
-  void _savePlace() {
-    if (_titleController.text.isEmpty || _pickedImage == null) {
-      return; //error messages or dialogue box can go here. e.g. showDialog.
-    }
-    Provider.of<UserComments>(context, listen: false)
-        .addComment(_titleController.text, _pickedImage);
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  void _savePlace() async {
+    //   if (_titleController.text.isEmpty || _pickedImage == null) {
+    //     return; //error messages or dialogue box can go here. e.g. showDialog.
+    //   }
+
+    final result = await _addComment(_titleController.text, _pickedImage);
+    //Navigator.of(context).pop(true);
     Navigator.of(context).pop();
+    //Navigator.of(context).popAndPushNamed(ViewNewsScreen.routeName);
+    
+  }
+
+  Future<bool> _addComment(String text, File pickedImage) async {
+    if (text == null || text.isEmpty) {
+      return Future.value(false);
+    }
+    String pickedImageRemoteUrl;
+    if (await pickedImage.exists()) {
+      final ref = FirebaseStorage.instance.ref().child(
+          DateTime.now().millisecondsSinceEpoch.toString());
+      final task = ref.putFile(pickedImage);
+      pickedImageRemoteUrl = await (await task.onComplete).ref.getDownloadURL();
+      print(pickedImageRemoteUrl);
+    }
+
+    final user = await DBService().getCurrentUserDetails();
+
+    Map<String, dynamic> data = {
+      "comment": text,
+      "dateTime": DateTime.now().millisecondsSinceEpoch.toString(),
+      "firstName": user.firstName,
+      "lastName": user.lastName,
+      "uid": user.uid,
+      "image": pickedImageRemoteUrl,
+    };
+
+    return Firestore.instance
+        .collection('comments')
+        .add(data)
+        .then((_) => Future.value(true))
+        .catchError((_) => Future.value(false));
   }
 
   @override
@@ -62,8 +107,11 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
                 child: Column(
                   children: <Widget>[
                     TextField(
-                      decoration: InputDecoration(labelText: 'Enter comments here:'),
+                      decoration: InputDecoration(
+                        labelText: 'Enter comments here:',
+                      ),
                       controller: _titleController,
+                      
                     ),
                     SizedBox(
                       height: 10,
