@@ -4,11 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:myhealthapp/helpers/database.dart';
-import 'package:myhealthapp/screens/view_news_screen.dart';
-import 'package:provider/provider.dart';
 
 import '../widgets/image_input.dart';
-import 'users_comments.dart';
 
 class AddCommentScreen extends StatefulWidget {
   static const routeName = '/add-comment';
@@ -41,7 +38,6 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
     //Navigator.of(context).pop(true);
     Navigator.of(context).pop();
     //Navigator.of(context).popAndPushNamed(ViewNewsScreen.routeName);
-    
   }
 
   Future<bool> _addComment(String text, File pickedImage) async {
@@ -49,9 +45,10 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
       return Future.value(false);
     }
     String pickedImageRemoteUrl;
-    if (await pickedImage.exists()) {
-      final ref = FirebaseStorage.instance.ref().child(
-          DateTime.now().millisecondsSinceEpoch.toString());
+    if (pickedImage != null && await pickedImage.exists()) {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child(DateTime.now().millisecondsSinceEpoch.toString());
       final task = ref.putFile(pickedImage);
       pickedImageRemoteUrl = await (await task.onComplete).ref.getDownloadURL();
       print(pickedImageRemoteUrl);
@@ -66,6 +63,7 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
       "lastName": user.lastName,
       "uid": user.uid,
       "image": pickedImageRemoteUrl,
+      "photoUrl": user.image,
     };
 
     return Firestore.instance
@@ -111,7 +109,6 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
                         labelText: 'Enter comments here:',
                       ),
                       controller: _titleController,
-                      
                     ),
                     SizedBox(
                       height: 10,
@@ -125,7 +122,7 @@ class _AddCommentScreenState extends State<AddCommentScreen> {
           RaisedButton.icon(
             icon: Icon(Icons.send, color: Colors.white),
             label: Text(
-              'Send Comment',
+              'Add Post',
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

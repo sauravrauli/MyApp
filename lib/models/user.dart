@@ -8,6 +8,8 @@ class User {
   final String image;
   final String email;
   final String dateOfBirth;
+  final String phoneNo;
+  final bool isAdmin;
 
   User(
       {this.uid,
@@ -16,7 +18,8 @@ class User {
       this.password,
       this.image,
       this.email,
-      this.dateOfBirth});
+      this.dateOfBirth,
+      this.phoneNo, this.isAdmin = false});
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,9 +27,11 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'password': password,
-      'image': image,
+      'photoUrl': image,
       'email': email,
       'dateOfBirth': dateOfBirth,
+      'phoneNo': phoneNo,
+      'isAdmin' : isAdmin,
     };
   }
 
@@ -38,9 +43,11 @@ class User {
       firstName: map['firstName'],
       lastName: map['lastName'],
       password: map['password'],
-      image: map['image'],
+      image: map['photoUrl'],
       email: map['email'],
       dateOfBirth: map['dateOfBirth'],
+      phoneNo: map['phoneNo'],
+      isAdmin: map['isAdmin'] ?? false,
     );
   }
 
@@ -50,7 +57,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, firstName: $firstName, lastName: $lastName, password: $password, image: $image, email: $email, dateOfBirth: $dateOfBirth)';
+    return 'User(uid: $uid, firstName: $firstName, lastName: $lastName, password: $password, photoUrl: $image, email: $email, dateOfBirth: $dateOfBirth, phoneNo: $phoneNo, isAdmin: $isAdmin)';
   }
 
   @override
@@ -64,7 +71,9 @@ class User {
         o.password == password &&
         o.image == image &&
         o.email == email &&
-        o.dateOfBirth == dateOfBirth;
+        o.dateOfBirth == dateOfBirth &&
+        o.isAdmin == isAdmin &&
+        o.phoneNo == phoneNo;
   }
 
   @override
@@ -75,6 +84,8 @@ class User {
         password.hashCode ^
         image.hashCode ^
         email.hashCode ^
-        dateOfBirth.hashCode;
+        isAdmin.hashCode ^
+        dateOfBirth.hashCode ^
+        phoneNo.hashCode;
   }
 }

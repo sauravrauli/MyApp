@@ -8,17 +8,22 @@ import '../screens/view_overview_screen.dart';
 import '../widgets/app_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
+  final String uid;
+
+  TabsScreen({this.uid});
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  final List<Map<String, Object>> _pages = [
-    {'page': ViewNewsScreen(), 'title': 'News'},
-    {'page': ViewScheduleScreen(), 'title': 'Schedule'},
-    {'page': ViewTeamScreen(), 'title': 'My Roster'},
-    {'page': ViewOverviewScreen(), 'title': 'My Profile'},
-  ];
+  List<Map<String, Object>> get _pages => [
+        {'page': ViewNewsScreen(uid: widget.uid), 'title': 'News'},
+        {'page': ViewScheduleScreen(uid: widget.uid), 'title': 'Schedule'},
+        {'page': ViewTeamScreen(), 'title': 'My Roster'},
+        {'page': ViewOverviewScreen(), 'title': 'My Profile'},
+      ];
+
   int _selectedPageIndex = 0;
 
   void _selectPage(int index) {
@@ -30,7 +35,13 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_pages[_selectedPageIndex]['title'])
+      
+      appBar: AppBar(
+        centerTitle: true,//change alignment of text.
+        title: Text(
+          _pages[_selectedPageIndex]['title'],
+        ),
+        elevation: 1, //sets top of appbar blended less of a line on viewoverview(profile) container.
       ),
       drawer: AppDrawer(),
       body: _pages[_selectedPageIndex]['page'],
@@ -47,7 +58,7 @@ class _TabsScreenState extends State<TabsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today),
-              title: Text('Schedule'),
+              title: Text('My Schedule'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.people),
@@ -55,7 +66,7 @@ class _TabsScreenState extends State<TabsScreen> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              title: Text('Me'),
+              title: Text('My Profile'),
             ),
           ]),
     );

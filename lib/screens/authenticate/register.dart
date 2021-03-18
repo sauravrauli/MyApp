@@ -21,6 +21,8 @@ class _RegisterState extends State<Register> {
   String lastName = '';
   String email = '';
   String password = '';
+  String phoneNo = '';
+  String dateOfBirth = '';
   String error = '';
 
   @override
@@ -30,9 +32,9 @@ class _RegisterState extends State<Register> {
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-                backgroundColor: Colors.cyan,
+                backgroundColor: Colors.blue,
                 elevation: 0.0,
-                title: Text('Sign Up to NHS REGISTER')),
+                title: Text('Sign up to MyNHS')),
             body: Container(
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
               child: Form(
@@ -85,6 +87,27 @@ class _RegisterState extends State<Register> {
                         },
                       ),
                       SizedBox(height: 20),
+                      TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration:
+                            textInputDecoration.copyWith(hintText: 'Phone No.'),
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter a phone no' : null,
+                        onChanged: (val) {
+                          setState(() => phoneNo = val);
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration:
+                            textInputDecoration.copyWith(hintText: 'Enter DOB'),
+                        validator: (val) => val.isEmpty ? 'Enter a DOB' : null,
+                        onChanged: (val) {
+                          setState(() => dateOfBirth = val);
+                        },
+                      ),
+                      SizedBox(height: 20),
                       RaisedButton(
                         color: Colors.blue[400],
                         child: Text(
@@ -96,7 +119,13 @@ class _RegisterState extends State<Register> {
                             setState(() => loading = true);
                             dynamic result =
                                 await _auth.registerWithEmailAndPassword(
-                                    email, password, firstName, lastName);
+                              email,
+                              password,
+                              firstName,
+                              lastName,
+                              dateOfBirth,
+                              phoneNo,
+                            );
                             if (result == null) {
                               setState(() {
                                 error = "Please supply a valid email";
@@ -108,6 +137,8 @@ class _RegisterState extends State<Register> {
                           print(password);
                           print(firstName);
                           print(lastName);
+                          print(dateOfBirth);
+                          print(phoneNo);
                         },
                       ),
                       FlatButton(

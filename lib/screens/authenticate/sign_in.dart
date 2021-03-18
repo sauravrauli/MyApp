@@ -28,7 +28,7 @@ class _SignInState extends State<SignIn> {
         : Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              backgroundColor: Colors.cyan,
+              backgroundColor: Colors.blue,
               elevation: 0.0,
               title: Text('Sign In TO NHS REGISTER'),
             ),
@@ -85,6 +85,14 @@ class _SignInState extends State<SignIn> {
                         error,
                         style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
+                      FlatButton(
+                        onPressed: () async {
+                          dynamic result = await _auth.resetPassword(email);
+                        },
+                        child: Text('Forgot your password?',
+                            style: TextStyle(color: Colors.blue[900])),
+                      ),
+                      SizedBox(height: 1),
                       FlatButton(
                         onPressed: () {
                           widget.toggleView();

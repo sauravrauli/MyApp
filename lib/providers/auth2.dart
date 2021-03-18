@@ -3,13 +3,13 @@ import 'package:myhealthapp/helpers/database.dart';
 import 'package:myhealthapp/models/user.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth =
+      FirebaseAuth.instance; //create instance of firebase authentication.
 
 //create user obj based on firebaseuser
   User _userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
   }
-  
 
 //auth change user stream
   Stream<User> get user {
@@ -34,6 +34,7 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      if (user.isEmailVerified) return user.uid;
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -42,11 +43,19 @@ class AuthService {
   }
 
   //register with email and pass
-  Future registerWithEmailAndPassword(String email, String password,String firstName, String lastName) async {
+  Future registerWithEmailAndPassword(
+    String email,
+    String password,
+    String firstName,
+    String lastName,
+    String dateOfBirth,
+    String phoneNo,
+  ) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      await user.sendEmailVerification();
 
       //create new document for user with the uid. (dont add to this uid) - MANUALLY HARD CODES THIS DURING SIGNUP
       // await DBService(uid: user.uid).updateCommentData(
@@ -63,9 +72,13 @@ class AuthService {
         lastName,
         email,
         password,
-        '21/11/1997', //DUMMY DATA (WHERE DOB WILL BE ADDED.)
-        user.photoUrl
+        dateOfBirth, //DUMMY DATA (WHERE DOB WILL BE ADDED.)
+        user.photoUrl,
+        phoneNo,
       );
+      //call this function in DB service, create shift collection when user signs up.
+      await DBService(uid: user.uid)
+          .updateShiftData(firstName, lastName, 'dateTime');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -81,5 +94,9 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+
+  Future resetPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 }
