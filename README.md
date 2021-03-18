@@ -3,7 +3,7 @@
 =======
 # myhealthapp
 
-A new Flutter project.
+A shift management application for the NHS created on Flutter using the Dart language.
 
 ## Getting Started
 
